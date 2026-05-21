@@ -1,0 +1,43 @@
+version: "3"
+
+x-deploy: &deploy-dev
+  deploy:
+    resources:
+      limits:
+        cpus: "1"
+        memory: 512M
+      reservations:
+        memory: 256M
+x-env_file: &env_file
+  env_file:
+    - .env
+x-restart: &restart
+  restart: always #no, on-failure , always(default), unless-stopped 
+
+services:
+  mysql:
+    image: mariadb:10.6.4-focal
+    container_name: mysql
+    ports: ["3306:3306"]
+    <<: [*deploy-dev, *env_file, *restart]
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_HOST="%"
+    networks: ["hw"]
+
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    <<: [*deploy-dev, *env_file, *restart]
+    depends_on: ["mysql"]
+    ports: ["5000:5000"]
+    networks: ["hw"]
+
+networks:
+  hw:
+    name: hw

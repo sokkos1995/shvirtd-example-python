@@ -1,0 +1,7 @@
+haproxy/*
+nginx/*
+.venv/*
+LICENSE
+schema.pdf
+README.md
+__pycache__
