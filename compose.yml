@@ -1,4 +1,5 @@
-version: "3"
+include:
+    - "./proxy.yaml"
 
 x-deploy: &deploy-dev
   deploy:
@@ -15,8 +16,8 @@ x-restart: &restart
   restart: always #no, on-failure , always(default), unless-stopped 
 
 services:
-  mysql:
-    image: mariadb:10.6.4-focal
+  db:
+    image: mysql:8
     container_name: mysql
     ports: ["3306:3306"]
     <<: [*deploy-dev, *env_file, *restart]
@@ -26,18 +27,18 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_HOST="%"
-    networks: ["hw"]
+    networks:
+        backend:
+            ipv4_address: 172.20.0.10
 
-  app:
-    container_name: app
+  web:
+    container_name: web
     build:
       context: .
       dockerfile: Dockerfile.python
     <<: [*deploy-dev, *env_file, *restart]
-    depends_on: ["mysql"]
+    depends_on: ["db"]
     ports: ["5000:5000"]
-    networks: ["hw"]
-
-networks:
-  hw:
-    name: hw
+    networks:
+        backend:
+            ipv4_address: 172.20.0.5
