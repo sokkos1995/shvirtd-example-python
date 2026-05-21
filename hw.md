@@ -53,6 +53,28 @@ See 'snap info docker' for additional versions.
 4. Просканируйте образ на уязвимости.
 5. В качестве ответа приложите отчет сканирования.
 
+Решение
+```bash
+# инициализация
+yc init --username=sokkos199@yandex.ru
+# проверка что все ок
+yc config list
+
+# создание реджистри
+yc container registry create --name my-first-registry
+yc container registry configure-docker
+# проверяем что все ок
+cat ~/.docker/config.json | jq
+
+# тегируем образ и загружаем его
+docker tag shvirtd-example-python_app cr.yandex/crpdbsr7te7lntdvuebb/shvirtd-example-python_app:hello
+docker push cr.yandex/crpdbsr7te7lntdvuebb/shvirtd-example-python_app:hello
+# должно появиться тут
+# https://console.yandex.cloud/folders/b1gh060klv456091o7av/container-registry/registries
+```
+
+[Отчет](./tmp/vulnerabilities.csv), [скриншот](./images/hw01_01.png)
+
 ## Задача 3
 1. Изучите файл "proxy.yaml"
 2. Создайте в репозитории с проектом файл ```compose.yaml```. С помощью директивы "include" подключите к нему файл "proxy.yaml".
