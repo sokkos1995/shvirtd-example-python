@@ -1,7 +1,36 @@
-haproxy/*
-nginx/*
-.venv/*
+# secrets and local config
+.env
+.env.*
+
+# version control and editor
+.git
+.gitignore
+
+# local Python environment (runtime venv comes from builder stage)
+.venv
+venv
+
+# Python cache
+__pycache__
+*.pyc
+.pytest_cache
+
+# docs and homework artifacts
+README.md
 LICENSE
 schema.pdf
-README.md
-__pycache__
+hw.md
+images
+tmp
+
+# proxy stack (not needed in app image)
+haproxy
+nginx
+proxy.yaml
+
+# compose and Docker build files
+compose.yml
+compose.yaml
+Dockerfile
+Dockerfile.python
+.dockerignore
