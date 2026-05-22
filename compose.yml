@@ -26,7 +26,13 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_ROOT_HOST="%"
+      - MYSQL_ROOT_HOST=%
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 40s
     networks:
         backend:
             ipv4_address: 172.20.0.10
@@ -37,7 +43,9 @@ services:
       context: .
       dockerfile: Dockerfile.python
     <<: [*deploy-dev, *env_file, *restart]
-    depends_on: ["db"]
+    depends_on:
+      db:
+        condition: service_healthy
     ports: ["5000:5000"]
     networks:
         backend:
