@@ -91,6 +91,12 @@ docker push cr.yandex/crpdbsr7te7lntdvuebb/shvirtd-example-python_app:hello
 
 6. Остановите проект. В качестве ответа приложите скриншот sql-запроса.
 
+скрины 
+
+![один](./images/hw01_02.png)
+
+![два](./images/hw01_02.png)
+
 ## Задача 4
 1. Запустите в Yandex Cloud ВМ (вам хватит 2 Гб Ram).
 2. Подключитесь к Вм по ssh и установите docker.
@@ -123,7 +129,18 @@ which docker
 PROJECT_DIR=/opt/shvirtd-example-python
 REPO_URL=https://github.com/sokkos1995/shvirtd-example-python.git
 git clone "$REPO_URL" "$PROJECT_DIR"
+
+# или просто запускаем скрипт , который до этого прикопали в хомяке 
+/home/kdsoko/start-project.sh 
+# проверка данных в БД
+docker exec -ti mysql mysql -uroot -pYtReWq4321
 ```
+
+скрины 
+
+![один](./images/hw01_02.png)
+
+![два](./images/hw01_02.png)
 
 ## Задача 5 (*)
 1. Напишите и задеплойте на вашу облачную ВМ bash скрипт, который произведет резервное копирование БД mysql в директорию "/opt/backup" с помощью запуска в сети "backend" контейнера из образа ```schnitzler/mysqldump``` при помощи ```docker run ...``` команды. Подсказка: "документация образа."
