@@ -99,6 +99,32 @@ docker push cr.yandex/crpdbsr7te7lntdvuebb/shvirtd-example-python_app:hello
 5. (Необязательная часть) Дополнительно настройте remote ssh context к вашему серверу. Отобразите список контекстов и результат удаленного выполнения ```docker ps -a```
 6. Повторите SQL-запрос на сервере и приложите скриншот и ссылку на fork.
 
+### Решение
+
+```bash
+scp -i ~/.ssh/id_ed25519_yandex start-project.sh kdsoko@51.250.41.243:/home/kdsoko/
+ssh -l kdsoko -i <path-to-ssh> <ip>
+# например
+# ssh -l kdsoko -i ~/.ssh/id_ed25519_yandex 51.250.41.243
+
+# проверяем докер
+which docker
+# если нет
+# apt install docker.io
+
+# проверяем докер компоуз
+# sudo mkdir -p /usr/local/lib/docker/cli-plugins
+# sudo curl -SL "https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-linux-x86_64" \
+#   -o /usr/local/lib/docker/cli-plugins/docker-compose
+# sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+# docker compose version
+
+# скачиваем проект
+PROJECT_DIR=/opt/shvirtd-example-python
+REPO_URL=https://github.com/sokkos1995/shvirtd-example-python.git
+git clone "$REPO_URL" "$PROJECT_DIR"
+```
+
 ## Задача 5 (*)
 1. Напишите и задеплойте на вашу облачную ВМ bash скрипт, который произведет резервное копирование БД mysql в директорию "/opt/backup" с помощью запуска в сети "backend" контейнера из образа ```schnitzler/mysqldump``` при помощи ```docker run ...``` команды. Подсказка: "документация образа."
 2. Протестируйте ручной запуск
