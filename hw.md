@@ -95,7 +95,7 @@ docker push cr.yandex/crpdbsr7te7lntdvuebb/shvirtd-example-python_app:hello
 
 ![один](./images/hw01_02.png)
 
-![два](./images/hw01_02.png)
+![два](./images/hw01_03.png)
 
 ## Задача 4
 1. Запустите в Yandex Cloud ВМ (вам хватит 2 Гб Ram).
@@ -140,7 +140,7 @@ docker exec -ti mysql mysql -uroot -pYtReWq4321
 
 ![один](./images/hw01_02.png)
 
-![два](./images/hw01_02.png)
+![два](./images/hw01_03.png)
 
 ## Задача 5 (*)
 1. Напишите и задеплойте на вашу облачную ВМ bash скрипт, который произведет резервное копирование БД mysql в директорию "/opt/backup" с помощью запуска в сети "backend" контейнера из образа ```schnitzler/mysqldump``` при помощи ```docker run ...``` команды. Подсказка: "документация образа."
@@ -152,9 +152,79 @@ docker exec -ti mysql mysql -uroot -pYtReWq4321
 Скачайте docker образ ```hashicorp/terraform:latest``` и скопируйте бинарный файл ```/bin/terraform``` на свою локальную машину, используя dive и docker save.
 Предоставьте скриншоты  действий .
 
+### Решение
+
+```bash
+docker pull hashicorp/terraform:latest
+# latest: Pulling from hashicorp/terraform
+# 26c998063986: Pull complete 
+# ca9979e80c96: Pull complete 
+# 6d60f122e292: Pull complete 
+# ba3a113dfe2c: Pull complete 
+# Digest: sha256:15bf5a08b1fb9c9747c8ff01098aeeefb4aec9a6c24eb13e7661bdf9447e4aee
+# Status: Downloaded newer image for hashicorp/terraform:latest
+# docker.io/hashicorp/terraform:latest
+
+dive hashicorp/terraform:latest
+
+# сохраняем файл в хомяке
+mkdir -p ~/hw06-terraform && cd ~/hw06-terraform
+docker save hashicorp/terraform:latest -o terraform-image.tar
+
+ls -la | grep terr
+# -rw-------    1 konstantinsokolov  staff  139084800  1 июн 19:29 terraform-image.tar
+tar -xf terraform-image.tar 
+ls -la
+# total 296096
+# drwxr-xr-x   10 konstantinsokolov  staff        320  1 июн 19:30 .
+# drwxr-x---+ 105 konstantinsokolov  staff       3360  1 июн 19:30 ..
+# drwxr-xr-x    5 konstantinsokolov  staff        160 27 май 15:33 321d3bb7c516ce201f2969f6077dac81f56be29c4d0c45b00e1195305ab6f01b
+# -rw-r--r--    1 konstantinsokolov  staff       4288 27 май 15:33 5592d68ba708bec67f72d21efd21623d427defed1d9abc360334311dca0101df.json
+# drwxr-xr-x    5 konstantinsokolov  staff        160 27 май 15:33 864813a32ffc359f399f04ee8f9ea51c5d26d10247f0f2a815b7f32f581992c5
+# drwxr-xr-x    5 konstantinsokolov  staff        160 27 май 15:33 c268ed8db0964e7e83c9fb6327faddd4adde8621823f0d18ed6726ce298231f2
+# drwxr-xr-x    5 konstantinsokolov  staff        160 27 май 15:33 d0b80498e1ac44fcfeddf959a7fa6f839ef10e22eac1e138f504787f10a9a21d
+# -rw-r--r--    1 konstantinsokolov  staff        446  1 янв  1970 manifest.json
+# -rw-r--r--    1 konstantinsokolov  staff        102  1 янв  1970 repositories
+# -rw-------    1 konstantinsokolov  staff  139084800  1 июн 19:29 terraform-image.tar
+cd 321d3bb7c516ce201f2969f6077dac81f56be29c4d0c45b00e1195305ab6f01b  
+ls   
+# VERSION   json      layer.tar
+tar -xf layer.tar 
+ls   
+# VERSION   bin       json      layer.tar
+cd bin 
+terraform version
+# zsh: command not found: terraform
+./terraform version
+# zsh: exec format error: ./terraform
+ls -la
+# total 210824
+# drwxr-xr-x  3 konstantinsokolov  staff         96 27 май 15:33 .
+# drwxr-xr-x  6 konstantinsokolov  staff        192  1 июн 19:31 ..
+# -rwxr-xr-x  1 konstantinsokolov  staff  107937976 27 май 15:28 terraform
+./terraform --version
+# zsh: exec format error: ./terraform
+file ./terraform
+# ./terraform: ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV), statically linked, BuildID[sha1]=05541b1f6316774d49f5149ba86f6680b099899d, stripped
+```
+
+![скрин дайва](./images/hw01_04.png)
+
+Тк у меня мак, а не линукс - запустить терраформ не получилось
+
+![скрин](./images/hw01_05.png)
+
 ## Задача 6.1
 Добейтесь аналогичного результата, используя docker cp.  
 Предоставьте скриншоты  действий .
+
+```bash
+docker create --name tf-extract hashicorp/terraform:latest
+# ea4cb0d8375b8c96a3ddcf50420ed1856f0646e5f4d4be63ced2944d6786fd4e
+docker cp tf-extract:/bin/terraform ./terraform
+file ./terraform
+# ./terraform: ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV), statically linked, BuildID[sha1]=05541b1f6316774d49f5149ba86f6680b099899d, stripped
+```
 
 ## Задача 6.2 (**)
 Предложите способ извлечь файл из контейнера, используя только команду docker build и любой Dockerfile.  
