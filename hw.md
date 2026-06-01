@@ -226,6 +226,8 @@ file ./terraform
 # ./terraform: ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV), statically linked, BuildID[sha1]=05541b1f6316774d49f5149ba86f6680b099899d, stripped
 ```
 
+![скрин](./images/hw01_06.png)
+
 ## Задача 6.2 (**)
 Предложите способ извлечь файл из контейнера, используя только команду docker build и любой Dockerfile.  
 Предоставьте скриншоты  действий .
